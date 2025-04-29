@@ -271,7 +271,7 @@ const SubmitPrototypeModal = ({ show, onHide, onPrototypeSubmitted }) => {
                   <Select
                     options={students.map((student) => ({
                       value: student.id,
-                      label: student.username || student.email
+                      label: student.full_name||student.username || student.email
                     }))}
                     value={
                       selectedStudent
@@ -311,11 +311,11 @@ const SubmitPrototypeModal = ({ show, onHide, onPrototypeSubmitted }) => {
                   isMulti
                   options={supervisors.map((sup) => ({
                     value: sup.id,
-                    label: sup.username || sup.email
+                    label: sup.full_name||sup.username || sup.email
                   }))}
                   value={supervisorsSelected.map((id) => {
                     const sup = supervisors.find(s => s.id === id);
-                    return { value: sup.id, label: sup.username || sup.email };
+                    return { value: sup.id, label: sup.full_name||sup.username || sup.email };
                   })}
                   onChange={(selectedOptions) => {
                     if (selectedOptions.length <= 5) {
@@ -405,30 +405,31 @@ const SubmitPrototypeModal = ({ show, onHide, onPrototypeSubmitted }) => {
             </div>
           </div>
 
-          <div className="form-actions">
-            <Button 
+          <div className="classic-modal-footer">
+          <Button 
               variant="outline-secondary" 
               onClick={onHide} 
-              className="cancel-btn"
+              className="classic-modal-btn classic-modal-btn-cancel" 
               disabled={loading}
             >
+           <i className="fas fa-times mr-2"></i>
               Cancel
             </Button>
             <Button 
              style={{backgroundColor:'#64A293',border:'none'}}
               type="submit" 
-              className="submit-btn"
+              className="classic-modal-btn classic-modal-btn-primary" 
               disabled={loading}
             >
               {loading ? (
                 <>
-                  <span className="spinner-border spinner-border-sm" role="status"></span>
+                  <span className="fas fa-spinner fa-spin mr-2" role="status"></span>
                   Submitting...
                 </>
               ) : (
                 <>
-                  <i className="fas fa-paper-plane mr-2"></i>
-                  {userRole === "admin" ? "Create Prototype" : "Submit Prototype"}
+                <i className="fas fa-save mr-2"style={{ color: 'white' }}></i>
+                {userRole === "admin" ? "Create Prototype" : "Submit Prototype"}
                 </>
               )}
             </Button>
