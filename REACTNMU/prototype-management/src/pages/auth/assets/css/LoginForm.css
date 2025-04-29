@@ -1,0 +1,113 @@
+.formContents {
+    min-height: 100vh; /* Ensure full viewport height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .heading-title {
+    color: #000000;
+  }
+  
+  .heading-subtitle {
+    color: #64A293;
+  }
+  
+  .content-description {
+    color: #787878;
+  }
+  
+  .circles-blur {
+    position: absolute;
+    top: 0; 
+    left:8%;
+    filter: blur(35px);
+    z-index: -1;
+  }
+  
+  .circle-blur {
+    position: absolute;
+    bottom: 0; /* Adjust as needed */
+    left: 0; /* Adjust as needed */
+    filter: blur(35px);
+    z-index: -1;
+  }
+  
+  
+  .login-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-inputs {
+    padding: 13px 12px 13px 12px;
+    margin-bottom: 19px;
+    background-color: #FFFFFF82;
+    border: 1px solid #E8E8E8;
+    border-radius: 24px;
+    outline: none;
+  }
+  
+  .Signin {
+    padding: 13px 12px 13px 12px;
+    background-color: #64A293;
+    border-radius: 24px;
+    border: none;
+    color: #ffffff;
+  }
+  
+  .Signin:hover {
+    opacity: 0.7;
+    transition: 0.4s ease-in-out;
+  }
+  
+  .Alpha_image {
+    border-radius: 33px;
+    border: 4px solid #ffffff;
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .alert {
+    margin-bottom: 15px;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 767.98px) { /* Small screens */
+    .circles-blur,
+    .circle-blur {
+      display: none;
+    }
+  
+    .Alpha_image {
+      margin-top: 20px;
+      margin-right: 0;
+    }
+  
+    .formContents {
+      padding: 1rem;
+    }
+  
+    .col-md-4 {
+      padding: 1rem;
+    }
+  }
+  
+  @media (min-width: 768px) and (max-width: 991.98px) { /* Medium screens */
+    .circles-blur {
+      left: -10%;
+    }
+    .Alpha_image {
+      margin-right: 0;
+    }
+  }
+  
+  @media (min-width: 992px) { /* Large screens */
+    .formContents {
+      padding: 3rem;
+    }
+    .col-md-4 {
+      padding: 2rem;
+    }
+  }

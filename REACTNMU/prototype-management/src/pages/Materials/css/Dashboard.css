@@ -1,0 +1,120 @@
+/* Dashboard.css */
+
+/* Main Layout Structure */
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #FFFFFF;
+}
+
+/* Sidebar adjustments are now handled in Sidebar.css */
+
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+  transition: margin 0.3s ease;
+  margin-left: 270px; /* Default sidebar width */
+}
+
+.app-sidebar.collapsed + .main-content {
+  margin-left: 70px; /* Collapsed sidebar width */
+}
+
+/* Navbar */
+.navibar-dashboard {
+  width: 100%;
+  border-bottom: 2px solid #E0E0E0;
+  padding: 0.5rem;
+}
+
+/* Cards */
+.gradient-card {
+  background: linear-gradient(276.02deg, #44B0BF 0.63%, #4364D1 84.61%);
+  border: none;
+}
+
+.bg-image-card {
+  background-size: cover;
+  background-position: center;
+  background-image: url('./../img/nasa.jpeg');
+  background-repeat: no-repeat;
+  border: none;
+}
+
+.prototype-item {
+  margin-bottom: 8px;
+  padding: 20px;
+  border-left: 4px solid #64A293;
+}
+
+/* Right-side cards */
+.right-cards {
+  margin-top: -39px;
+  margin-left: 1rem;
+}
+
+/* ========== Responsive Media Queries ========== */
+
+/* Mobile (Portrait) - Up to 768px */
+@media (max-width: 768px) {
+  .dashboard-layout {
+    flex-direction: column;
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding-bottom: 60px; /* Space for mobile bottom bar */
+    width: 100%;
+  }
+
+  .row.mb-4.mx-5 {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .gradient-card, 
+  .bg-image-card {
+    width: 100% !important;
+    margin-bottom: 15px;
+  }
+
+  .prototype-btns {
+    margin-left: 0 !important;
+    justify-content: center !important;
+  }
+
+  .right-cards {
+    margin-top: 20px;
+    margin-left: 0;
+  }
+
+  .card {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+/* Tablet (Landscape) - 769px to 991px */
+@media (min-width: 769px) and (max-width: 915px) {
+  .main-content {
+    margin-left: 70px; /* Keep sidebar collapsed on medium screens */
+  }
+  
+  .card{
+    display: flex;
+    flex-direction: column;
+  }
+  .gradient-card {
+    width: 300px !important;
+  }
+  
+
+  .bg-image-card {
+    width: 500px !important;
+  }
+}
+
+/* Desktop - 992px and above */
+@media (min-width: 992px) {
+  /* No changes needed for desktop */
+}
