@@ -25,12 +25,18 @@
   width: 100%;
   border-bottom: 2px solid #E0E0E0;
   padding: 0.5rem;
+  background-color: #FFFFFF;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 /* Cards */
 .gradient-card {
   background: linear-gradient(276.02deg, #44B0BF 0.63%, #4364D1 84.61%);
   border: none;
+  min-width:700px;
+  margin: 5px auto;
+  border-radius: 24px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .bg-image-card {
@@ -39,18 +45,86 @@
   background-image: url('./../img/nasa.jpeg');
   background-repeat: no-repeat;
   border: none;
+  width: 100%;
+  max-width: 629px;
+  margin: 10px auto;
+  border-radius: 24px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .prototype-item {
   margin-bottom: 8px;
-  padding: 20px;
+  padding: 10px;
   border-left: 4px solid #64A293;
+  overflow: hidden; /* Prevent overflow of content */
+  text-overflow: ellipsis; /* Handle long text */
+  white-space: normal; /* Allow text wrapping */
+  box-sizing: border-box; /* Ensure padding doesn't affect width */
 }
 
 /* Right-side cards */
 .right-cards {
-  margin-top: -39px;
+  margin-top: 20px;
   margin-left: 1rem;
+}
+
+/* All cards */
+.card {
+  width: 100%;
+  max-width: 1059px;
+  margin: 10px auto;
+  box-sizing: border-box; /* Ensure padding doesn't affect width */
+  border-radius: 24px;
+  border: 1px solid #EFEFEF;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Specific styles for the Recent Prototypes card */
+.recent-prototypes-card {
+  width: 100%;
+  max-width: 1059px;
+  height: 380px; /* Increased height to fit the Preview button */
+  border: 1px solid #EFEFEF;
+  border-radius: 24px;
+  overflow: hidden; /* Prevent content from exceeding the card */
+}
+
+/* Container for prototype items */
+.recent-prototypes-card .row.row-cols-1.row-cols-md-3 {
+  height: calc(100% - 90px); /* Adjust for title and button space */
+  overflow-y: auto; /* Allow scrolling if content overflows */
+  margin: 0; /* Remove default margins */
+  padding: 0 10px; /* Add padding to prevent content from touching edges */
+}
+
+/* Center the Preview All button */
+.recent-prototypes-card .mt-3 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+  margin-bottom: 10px; /* Add bottom margin for spacing */
+}
+
+.recent-prototypes-card .btn-outline-success {
+  font-size: 0.9rem;
+  padding: 5px 15px;
+  border-color: #64A293;
+  color: #64A293;
+}
+
+.recent-prototypes-card .btn-outline-success:hover {
+  background-color: #64A293;
+  color: white;
+}
+
+/* Specific styles for the Monthly Upload Summary chart card */
+.chart-card {
+  width: 100%;
+  max-width: 1059px;
+  height: 450px; /* Reduced height to fit chart better */
+  border: 1px solid #EFEFEF;
+  border-radius: 24px;
 }
 
 /* ========== Responsive Media Queries ========== */
@@ -63,58 +137,467 @@
 
   .main-content {
     margin-left: 0;
-    padding-bottom: 60px; /* Space for mobile bottom bar */
+    padding: 15px;
+    padding-bottom: 80px; /* Increased to account for bottom navigation bar */
     width: 100%;
+    box-sizing: border-box;
   }
 
-  .row.mb-4.mx-5 {
+  .row.mb-4.mx-5.all_cards {
     margin-left: 0 !important;
     margin-right: 0 !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px; /* Add spacing between cards */
   }
 
   .gradient-card, 
   .bg-image-card {
-    width: 100% !important;
-    margin-bottom: 15px;
+    width: 90% !important; /* Restore original width */
+    max-width: none;
+    margin: 10px auto; /* Restore original margins */
+    padding: 10px; /* Ensure content has space inside */
+    box-sizing: border-box;
+  }
+
+  .gradient-card .card-body,
+  .bg-image-card .card-body {
+    padding: 10px;
+  }
+
+  .gradient-card .card-title,
+  .bg-image-card .card-title {
+    font-size: 1rem; /* Smaller font size for mobile */
+    margin-bottom: 5px;
+  }
+
+  .gradient-card .card-text,
+  .bg-image-card .card-text {
+    font-size: 0.9rem; /* Adjust text size */
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .gradient-card .card-text.display-4 {
+    font-size: 1.5rem; /* Reduce large text size */
+  }
+
+  .bg-image-card .btn {
+    font-size: 0.8rem; /* Smaller button text */
+    padding: 5px 10px; /* Smaller button padding for touch */
   }
 
   .prototype-btns {
     margin-left: 0 !important;
     justify-content: center !important;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 90%; /* Ensure buttons don't overflow */
+  }
+
+  .prototype-btns .btn {
+    width: 100%; /* Full width buttons for touch */
+    max-width: 200px; /* Limit button width */
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+
+  .right-cards {
+    width:100%;
+    margin-top: -3px;
+    margin-bottom: 10px;
+    margin-left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .right-cards .card {
+    width: 320px !important; /* Restore original width */
+    max-width: none !important;
+    margin: 10px auto; /* Restore original margins */
+    padding: 10px;
+  }
+
+  .right-cards .card-body {
+    padding: 10px;
+  }
+
+  .right-cards .card-title {
+    font-size: 1rem;
+  }
+
+  .right-cards .card-text {
+    font-size: 0.9rem;
+    white-space: normal; /* Allow text wrapping */
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .right-cards .avatar img {
+    width: 40px; /* Smaller avatar for mobile */
+    height: 40px;
+  }
+
+  .card {
+    width: 90% !important; /* Restore original width */
+    max-width: none !important;
+    margin: 10px auto; /* Restore original margins */
+    padding: 10px;
+  }
+
+  .card-body {
+    padding: 10px;
+  }
+
+  .card-title {
+    font-size: 1rem;
+  }
+
+  .card-text {
+    font-size: 0.9rem;
+  }
+
+  .prototype-item {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  .prototype-item p {
+    margin-bottom: 5px; /* Reduce spacing between lines */
+    white-space: normal; /* Allow text wrapping */
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .row.justify-content-center.align-content-center {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Recent Prototypes Card on Mobile */
+  .recent-prototypes-card {
+    height: auto; /* Allow card to grow with content */
+    min-height: 380px; /* Match desktop height */
+    padding-bottom: 10px;
+  }
+
+  .recent-prototypes-card .row.row-cols-1.row-cols-md-3 {
+    height: auto; /* Allow content to dictate height */
+    max-height: 270px; /* Increased to match new card height */
+    overflow-y: auto;
+    padding: 0 5px;
+  }
+
+  .recent-prototypes-card .mt-3 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+
+  .recent-prototypes-card .btn-outline-success {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+  }
+
+  /* Chart Card on Mobile */
+  .chart-card {
+    height: 350px; /* Reduced height for mobile */
+  }
+
+  .chart-card .w-full {
+    width: 100% !important;
+  }
+
+  .chart-card .w-full .ResponsiveContainer {
+    height: 150px !important; /* Further reduced chart height for mobile */
+  }
+
+  .chart-card .w-full .ResponsiveContainer .recharts-cartesian-axis-tick {
+    font-size: 0.7rem; /* Even smaller axis labels */
+  }
+}
+
+/* Tablet (Portrait and Landscape) - 769px to 991px */
+@media (min-width: 769px) and (max-width: 991px) {
+  .main-content {
+    margin-left: 0; /* No sidebar on the left, bottom nav instead */
+    padding: 15px;
+    padding-bottom: 80px; /* Space for bottom navigation */
+  }
+
+  .row.mb-4.mx-5.all_cards {
+    margin-left: 15px !important;
+    margin-right: 15px !important;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .gradient-card {
+    width: 45% !important;
+    max-width: 350px;
+    margin: 10px;
+    padding: 10px;
+  }
+
+  .bg-image-card {
+    width: 90% !important;
+    max-width: 500px;
+    margin: 10px auto;
+    padding: 10px;
+  }
+
+  .card {
+    width: 90% !important;
+    max-width: none;
+    margin: 10px auto;
+    padding: 10px;
   }
 
   .right-cards {
     margin-top: 20px;
     margin-left: 0;
-  }
-
-  .card {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-}
-
-/* Tablet (Landscape) - 769px to 991px */
-@media (min-width: 769px) and (max-width: 915px) {
-  .main-content {
-    margin-left: 70px; /* Keep sidebar collapsed on medium screens */
-  }
-  
-  .card{
     display: flex;
     flex-direction: column;
+    align-items: center;
   }
-  .gradient-card {
-    width: 300px !important;
-  }
-  
 
-  .bg-image-card {
-    width: 500px !important;
+  .prototype-btns {
+    margin-left: 0 !important;
+    justify-content: center !important;
+    gap: 10px;
+  }
+
+  .row.justify-content-center.align-content-center {
+    margin-left: 15px !important;
+    margin-right: 15px !important;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  /* Recent Prototypes Card on Tablet */
+  .recent-prototypes-card {
+    height: 380px; /* Match desktop height */
+  }
+
+  .recent-prototypes-card .row.row-cols-1.row-cols-md-3 {
+    max-height: 270px; /* Match new card height */
+    overflow-y: auto;
+    padding: 0 10px;
+  }
+
+  /* Chart Card on Tablet */
+  .chart-card {
+    height: 400px; /* Slightly reduced for tablet */
+  }
+
+  .chart-card .w-full .ResponsiveContainer {
+    height: 200px !important; /* Adjust chart height for tablet */
   }
 }
 
-/* Desktop - 992px and above */
+/* Desktop - 992px and above (up to 75-inch screens) */
 @media (min-width: 992px) {
-  /* No changes needed for desktop */
+  .main-content {
+    padding: 30px 40px; /* Increased padding for better spacing */
+  }
+
+  .row.mb-4.mx-5.all_cards {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: stretch;
+    margin-left: 30px !important;
+    margin-right: 30px !important;
+    gap: 20px; /* Add spacing between cards */
+  }
+
+  .gradient-card {
+    width: 100%;
+    max-width: 350px; /* Slightly smaller to match the image */
+    height: 150px; /* Match the image height */
+    margin: 0;
+  }
+
+  .bg-image-card {
+    width: 100%;
+    max-width: 600px; /* Adjusted to match the image */
+    height: 150px; /* Match the image height */
+    margin: 0;
+  }
+
+  .bg-image-card .card-title {
+    font-size: 1.2rem;
+    margin-left: 15px;
+    margin-top: 15px;
+  }
+
+  .bg-image-card .card-text {
+    font-size: 0.9rem;
+    margin-left: 15px;
+  }
+
+  .bg-image-card .btn {
+    margin-right: 15px;
+  }
+
+  .prototype-btns {
+    margin-left: 30px !important;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+  }
+
+  .row.justify-content-center.align-content-center {
+    margin-left: 30px !important;
+    margin-right: 30px !important;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 20px; /* Add spacing between columns */
+  }
+
+  .recent-prototypes-card {
+    height: 380px; /* Preserve the intentional change */
+    max-width: 700px; /* Adjusted to match the image */
+  }
+
+  .chart-card {
+    height: 450px; /* Preserve the intentional change */
+    max-width: 700px; /* Adjusted to match the image */
+    margin-top: 20px;
+  }
+
+  .chart-card .w-full {
+    width: 100% !important;
+  }
+
+  .chart-card .w-full .ResponsiveContainer {
+    height: 300px !important; /* Adjusted to match the image */
+  }
+
+  .chart-card .w-full .ResponsiveContainer .recharts-cartesian-axis-tick {
+    font-size: 0.9rem;
+  }
+
+  .chart-card .recharts-cartesian-grid-horizontal line,
+  .chart-card .recharts-cartesian-grid-vertical line {
+    stroke: rgba(0, 0, 0, 0.1); /* Lighter grid lines to match the image */
+  }
+
+  .chart-card .recharts-bar-rectangle path {
+    fill: #A3D8E2; /* Lighter blue bars to match the image */
+  }
+
+  .right-cards {
+    margin-top: 0; /* Remove negative margin to align with the image */
+    margin-left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Add spacing between right cards */
+    width: 100%;
+    max-width: 350px; /* Adjusted to match the image */
+  }
+
+  .right-cards .card {
+    width: 100%;
+    max-width: 350px; /* Adjusted to match the image */
+    height: 180px; /* Adjusted to match the image */
+    margin: 0;
+  }
+
+  .right-cards .card-body {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .right-cards .avatar {
+    margin-bottom: 10px;
+  }
+
+  .right-cards .avatar img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .right-cards .card-title {
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+  }
+
+  .right-cards .card-text {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+  }
+}
+
+/* For very large screens (up to 75-inch, approximately 3840px) */
+@media (min-width: 3840px) {
+  .main-content {
+    padding: 40px 60px; /* Scale padding for larger screens */
+  }
+
+  .gradient-card {
+    max-width: 500px;
+    height: 200px;
+  }
+
+  .bg-image-card {
+    max-width: 900px;
+    height: 200px;
+  }
+
+  .recent-prototypes-card {
+    max-width: 1000px;
+    height: 500px;
+  }
+
+  .recent-prototypes-card .row.row-cols-1.row-cols-md-3 {
+    max-height: 380px; /* Adjust for new card height */
+  }
+
+  .chart-card {
+    max-width: 1000px;
+    height: 600px;
+  }
+
+  .chart-card .w-full .ResponsiveContainer {
+    height: 400px !important;
+  }
+
+  .right-cards .card {
+    max-width: 500px;
+    height: 250px;
+  }
+
+  .right-cards .avatar img {
+    width: 70px;
+    height: 70px;
+  }
+
+  .right-cards .card-title {
+    font-size: 1.4rem;
+  }
+
+  .right-cards .card-text {
+    font-size: 1.2rem;
+  }
+
+  .row.mb-4.mx-5.all_cards,
+  .row.justify-content-center.align-content-center {
+    gap: 30px;
+  }
 }

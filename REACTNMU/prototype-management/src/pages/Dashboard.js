@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/api";
 import "./Materials/css/Dashboard.css";
@@ -8,12 +8,9 @@ import SubmitPrototypeModal from "./SubmitPrototype";
 import { TbReportAnalytics } from "react-icons/tb";
 import { LuOrbit } from "react-icons/lu";
 import { Button } from 'react-bootstrap';
-
-
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts';
-
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
@@ -138,48 +135,21 @@ const Dashboard = () => {
 
   const displayedPrototypes = prototypes.slice(0, 6);
 
-  const chartData = {
-    labels: monthlyStats.labels,
-    datasets: [
-      {
-        label: 'Prototypes Uploaded',
-        data: monthlyStats.data,
-        backgroundColor: '#64A293',
-        borderRadius: 10,
-        barThickness: 30,
-      },
-    ],
-  };
-
-  const chartOptions = {
-    responsive: true,
-    plugins: {
-      legend: { display: false },
-      title: { display: false },
-    },
-    scales: {
-      y: { beginAtZero: true },
-    },
-  };
-
   return (
-<div className="dashboard-container">
-  <DashboardSidebar />
-  <div className="main-content p-2 shadow-sm">
-    <DashboardHeader
-    
-      user={user}
-      searchTerm={searchTerm}
-      setSearchTerm={setSearchTerm}
-      handleShowSubmitModal={handleShowSubmitModal}
-      userRole={userRole}
-    />
-
-
+    <div className="dashboard-container">
+      <DashboardSidebar />
+      <div className="main-content p-2 shadow-sm">
+        <DashboardHeader
+          user={user}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          handleShowSubmitModal={handleShowSubmitModal}
+          userRole={userRole}
+        />
 
         <div className="row mb-4 mx-5 all_cards">
           <div className="col">
-            <div className="card gradient-card" style={{ width: '400px', height: '129px', borderRadius: '24px' }}>
+            <div className="card gradient-card" style={{borderRadius: '24px' }}>
               <div className="card-body">
                 <h5 className="card-title text-white">Your Prototypes</h5>
                 <p className="card-text display-4 text-white"><LuOrbit /> <strong>{prototypeCount}</strong></p>
@@ -187,21 +157,21 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="col">
-            <div className="card gradient-card" style={{ width: '400px', height: '129px', borderRadius: '24px' }}>
+            <div className="card gradient-card" style={{ borderRadius: '24px' }}>
               <div className="card-body">
                 <h5 className="card-title text-white">Available Prototypes</h5>
-                <p className="card-text display-4 text-white"><TbReportAnalytics />  <strong>{availablePrototypeCount}</strong></p>
+                <p className="card-text display-4 text-white"><TbReportAnalytics /> <strong>{availablePrototypeCount}</strong></p>
               </div>
             </div>
           </div>
           <div className="col">
-            <div className="card bg-image-card text-white" style={{ width: '629px', height: '129px', borderRadius: '24px' }}>
+            <div className="card bg-image-card text-white" style={{ borderRadius: '24px' }}>
               <div className="">
                 <h5 className="card-title" style={{ color: '#64A293', marginLeft: '20px', marginTop: '20px' }}>Your Innovation Hub</h5>
                 <p className="card-text text-dark" style={{ marginLeft: '20px' }}>Creative design</p>
               </div>
               <div className="d-flex justify-content-end mb-3 m-2">
-                <button className="btn btn-success" style={{backgroundColor:'#64A293',border:'none'}}>Start Now</button>
+                <button className="btn btn-success" style={{ backgroundColor: '#64A293', border: 'none' }}>Start Now</button>
               </div>
             </div>
           </div>
@@ -219,6 +189,7 @@ const Dashboard = () => {
           />
           {(userRole === 'admin' || userRole === 'staff') && (
             <div className="mb-4 mx-5 d-flex gap-2">
+
                <SubmitPrototypeModal
             show={showSubmitModal}
             onHide={handleCloseSubmitModal}
@@ -228,7 +199,7 @@ const Dashboard = () => {
               handleCloseSubmitModal();
             }}
           />
-              
+
               <Button variant="outline-primary" onClick={() => handleExport('excel')}>Export as CSV</Button>
               <Button variant="outline-danger" onClick={() => handleExport('pdf')}>Export as PDF</Button>
             </div>
@@ -237,12 +208,12 @@ const Dashboard = () => {
 
         <div className="row mx-5 justify-content-center align-content-center">
           <div className="col">
-            <div className="card" style={{ width: '100%', maxWidth: '1059px', height: '350px', border: '1px solid #EFEFEF', borderRadius: '24px' }}>
+            <div className="card recent-prototypes-card " style={{ width: '100%', maxWidth: '1059px', height: '450px', border: '1px solid #EFEFEF', borderRadius: '24px' }}>
               <div className="card-body">
                 <h5 className="card-title">Recent Prototypes</h5>
                 <div className="row row-cols-1 row-cols-md-3 g-3 mt-1">
                   {displayedPrototypes.map((proto) => (
-                    <div key={proto.id} className="col ">
+                    <div key={proto.id} className="col">
                       <div className="prototype-item" style={{ height: '85px', borderLeft: '4px solid #64A293', paddingLeft: '10px' }}>
                         <p className="mb-0">{proto.title || 'Untitled'}</p>
                         <p className="mb-0">{proto.barcode || 'Untitled'}</p>
@@ -250,18 +221,17 @@ const Dashboard = () => {
                     </div>
                   ))}
                 </div>
-                <div className="mt-3 ">
-                  <button className="btn btn-outline-success mt-3 " onClick={navigateToPrototypes}>Preview All</button>
+                <div className="mt-3">
+                  <button className="btn btn-outline-success" onClick={navigateToPrototypes}>Preview All</button>
                 </div>
               </div>
             </div>
 
-            {/* Histogram Chart */}
-            <div className="card mt-4" style={{ width: '100%', maxWidth: '1059px', height: '600px', border: '1px solid #EFEFEF', borderRadius: '24px' }}>
+            <div className="card chart-card mt-4"  style={{ width: '100%', maxWidth: '1059px', height: '350px', border: '1px solid #EFEFEF', borderRadius: '24px' }}>
               <div className="card-body">
                 <h5 className="card-title">Monthly Upload Summary (Over 30 days)</h5>
-                  <div className="w-full md:w-1/2 xl:w-1/3 p-2">
-                      <ResponsiveContainer width="100%" height={250}>
+                <div className="w-full md:w-1/2 xl:w-1/3 p-2">
+                  <ResponsiveContainer width="100%" height={250}>
                     <BarChart data={monthlyStats} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="day" angle={0} textAnchor="end" height={60} />
@@ -270,14 +240,12 @@ const Dashboard = () => {
                       <Bar dataKey="uploads" fill="#64A293" radius={[8, 8, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
-
+                </div>
               </div>
-            </div>
             </div>
           </div>
 
-             {/* Right Side - Three Cards */}
-             <div className=" col-md-4">
+          <div className="col-md-4">
             <div className="right-cards">
               <div className="mb-4">
                 <div className="card" style={{ width: '100%', maxWidth: '559px', height: '200px', borderRadius: '24px', border: '1px solid #EFEFEF' }}>
@@ -292,9 +260,8 @@ const Dashboard = () => {
                       />
                     </div>
                     <h5 className="card-title">Username: {user?.username || 'User Name'}</h5>
-                    <p className="card-text"> Email: {user?.email || 'user@email.com'}</p>
+                    <p className="card-text">Email: {user?.email || 'user@email.com'}</p>
                     <p className="card-text">Role: {userRole}</p>
-                    {/* Add more user info here */}
                   </div>
                 </div>
               </div>
@@ -302,14 +269,12 @@ const Dashboard = () => {
                 <div className="card" style={{ width: '100%', maxWidth: '559px', height: '200px', borderRadius: '24px', border: '1px solid #EFEFEF' }}>
                   <div className="card-body">
                     <h5 className="card-title"><strong>Institution Details</strong></h5>
-                    <p className="card-text">University Name  :  Nelson Mandela University</p>
-                    <p className="card-text">Institution ID  : {user?.institution_id || 'Not set'}</p>
-                    <p className="card-text">Phone number : {user?.phone || 'No contact'}</p>
-
+                    <p className="card-text">University Name: Nelson Mandela University</p>
+                    <p className="card-text">Institution ID: {user?.institution_id || 'Not set'}</p>
+                    <p className="card-text">Phone number: {user?.phone || 'No contact'}</p>
                   </div>
                 </div>
               </div>
-                  
             </div>
           </div>
         </div>

@@ -4,6 +4,7 @@ import DashboardSidebar from '../components/Sidebar';
 import DashboardHeader from '../components/Navbar';
 import api from '../api/api';
 import "../pages/Materials/css/ReviewPrototype.css";
+import { TiCloudStorage } from "react-icons/ti";
 import {  Dropdown } from 'react-bootstrap';
 import { PencilSquare, Eye, ChatDots } from 'react-bootstrap-icons';
 import ViewPrototypeModal from './ViewPrototype';
@@ -361,7 +362,7 @@ const ReviewPrototypes = () => {
                               </button>
 
                               <button className="btn btn-secondary btn-sm storage-btn" onClick={() => handleAssignStorageClick(prototype.id)}>
-                                <span className="btn-text">Assign Storage</span>
+                              <TiCloudStorage /> <span className="btn-text"> Assign Storage</span>
                               </button>
                             </>
                           )}
