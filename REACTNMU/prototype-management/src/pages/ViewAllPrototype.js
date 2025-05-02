@@ -201,13 +201,20 @@ const ViewAllPrototype =  ({ show, onHide, prototypeId })  => {
                   >
                     <div className="card-body">
                       <h5 className="card-title">Title: {prototype.title || "Untitled"}</h5>
+                      <h6 className="card-text">
+                          Status: {prototype.status === 'submitted_not_reviewed'
+                            ? 'Submitted (Not Reviewed)'
+                            : prototype.status === 'submitted_reviewed'
+                            ? 'Submitted (Reviewed)'
+                            : prototype.status || 'Not set'}
+                        </h6>
                       <h6 className="card-subtitle mb-2 text-muted">
-                        Student: {prototype.student?.username || getStudentName(prototype.student)}
+                        Student: {prototype.student?.full_name || prototype.student?.username || getStudentName(prototype.student)}
                       </h6>
-                      <p className="card-text">
+                      {/* <p className="card-text">
                         {prototype.abstract?.substring(0, 100)}
                         {prototype.abstract?.length > 50 && "..."}
-                      </p>
+                      </p> */}
                     </div>
                   </div>
                 </div>

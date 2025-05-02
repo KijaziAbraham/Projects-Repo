@@ -215,8 +215,15 @@ const Dashboard = () => {
                   {displayedPrototypes.map((proto) => (
                     <div key={proto.id} className="col">
                       <div className="prototype-item" style={{ height: '85px', borderLeft: '4px solid #64A293', paddingLeft: '10px' }}>
-                        <p className="mb-0">{proto.title || 'Untitled'}</p>
-                        <p className="mb-0">{proto.barcode || 'Untitled'}</p>
+                        <p className="mb-0">Title: {proto.title || 'Untitled'}</p>
+                        <p className="mb-0">
+                          Status: {proto.status === 'submitted_not_reviewed'
+                            ? 'Submitted (Not Reviewed)'
+                            : proto.status === 'submitted_reviewed'
+                            ? 'Submitted (Reviewed)'
+                            : proto.status || 'Not set'}
+                        </p>
+                        <p className="mb-0">Student: {proto.student ? `${proto.student.full_name} ` : ''}</p>
                       </div>
                     </div>
                   ))}
@@ -261,7 +268,13 @@ const Dashboard = () => {
                     </div>
                     <h5 className="card-title">Username: {user?.username || 'User Name'}</h5>
                     <p className="card-text">Email: {user?.email || 'user@email.com'}</p>
-                    <p className="card-text">Role: {userRole}</p>
+                    <p className="card-text">Role: {{
+                      student: 'Student',
+                      admin: 'System Administrator',
+                      staff: 'Staff/Faculty',
+                      general_user: 'General User',
+                    }[userRole] || 'Not set'}
+                  </p>
                   </div>
                 </div>
               </div>

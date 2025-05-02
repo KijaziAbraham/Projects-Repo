@@ -44,7 +44,7 @@ const SubmitPrototypeModal = ({ show, onHide, onPrototypeSubmitted }) => {
 
         if (user.role === "student") {
           setStudentDepartment(user.department || "");
-          setStudentLevel(user.level_display || "");
+          setStudentLevel(user.level || "");
         }
       } catch (err) {
         console.error("Error loading user:", err);
@@ -89,7 +89,7 @@ const SubmitPrototypeModal = ({ show, onHide, onPrototypeSubmitted }) => {
         try {
           const res = await api.get(`users/${selectedStudent}/`);
           const student = res.data;
-          setStudentDepartment(student.department || "");
+          setStudentDepartment(student.department.name || "");
           setStudentLevel(student.level_display || "");
         } catch (err) {
           console.error("Error fetching selected student info:", err);
@@ -183,8 +183,18 @@ const SubmitPrototypeModal = ({ show, onHide, onPrototypeSubmitted }) => {
       onHide();
     } catch (err) {
       console.error("Submit failed:", err);
-      setError(err.response?.data?.message || "Submission failed.");
-    } finally {
+      
+      // If backend sent field errors
+      if (err.response?.status === 400 && typeof err.response.data === 'object') {
+        const messages = Object.entries(err.response.data)
+          .map(([field, errors]) => `${field}: ${Array.isArray(errors) ? errors.join(', ') : errors}`)
+          .join('\n');
+        setError(messages);
+      } else {
+        setError(err.response?.data?.message || "Submission failed.");
+      }
+    }
+    finally {
       setLoading(false);
     }
   };
@@ -275,7 +285,7 @@ const SubmitPrototypeModal = ({ show, onHide, onPrototypeSubmitted }) => {
                     }))}
                     value={
                       selectedStudent
-                        ? { value: selectedStudent, label: (students.find(s => s.id === selectedStudent)?.username || students.find(s => s.id === selectedStudent)?.email) }
+                        ? { value: selectedStudent, label: (students.find(s => s.id === selectedStudent)?.full_name || students.find(s => s.id === selectedStudent)?.email) }
                         : null
                     }
                     onChange={(selectedOption) => setSelectedStudent(selectedOption ? selectedOption.value : '')}

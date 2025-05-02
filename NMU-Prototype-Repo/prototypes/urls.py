@@ -4,7 +4,7 @@ from .views import PrototypeViewSet, user_profile
 from .api_views import register_user, login_user
 from .views import (
     UserViewSet, PrototypeViewSet,
-    DepartmentViewSet, AdminUserViewSet, BulkUserImportView,UserImportTemplateView,
+    DepartmentViewSet, AdminUserViewSet, BulkUserImportView,UserImportTemplateView, PrototypeCommentViewSet,
     change_password,
     prototype_count_view, upload_summary_30_days
 )
@@ -15,6 +15,7 @@ router.register(r'prototypes', PrototypeViewSet, basename="prototype")
 router.register(r'users', UserViewSet) 
 router.register(r'departments', DepartmentViewSet) 
 router.register('admin/users', AdminUserViewSet, basename='admin-users')
+router.register(r'comments', PrototypeCommentViewSet, basename='comment')
 
 
 urlpatterns = [

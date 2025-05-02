@@ -49,6 +49,17 @@ from django.db import transaction
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import viewsets, permissions
+from .models import PrototypeComment
+from .serializers import PrototypeCommentSerializer
+
+class PrototypeCommentViewSet(viewsets.ModelViewSet):
+    queryset = PrototypeComment.objects.all()
+    serializer_class = PrototypeCommentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 class GeneralUserRegistrationView(generics.CreateAPIView):
     serializer_class = GeneralUserRegistrationSerializer
@@ -641,3 +652,11 @@ class BulkUserImportView(APIView):
             logger.error(f"Bulk import failed: {str(e)}", exc_info=True)
             return Response({'error': 'Internal server error during import'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+class PrototypeCommentViewSet(viewsets.ModelViewSet):
+    queryset = PrototypeComment.objects.all()
+    serializer_class = PrototypeCommentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

@@ -349,11 +349,13 @@ const ReviewPrototypes = () => {
                             <Eye /> <span className="btn-text">View</span>
                           </button>
 
-                          {user?.role === 'student' && prototype.student === user.id && (
+                          {user?.role === 'student' && prototype.student.id === user.id && (
                             <button className="btn btn-warning btn-sm edit-btn" onClick={() => handleEditClick(prototype.id)}>
                               <PencilSquare /> <span className="btn-text">Edit</span>
                             </button>
                           )}
+                         
+
 
                           {(user?.role === 'staff' || user?.role === 'admin') && (
                             <>

@@ -175,7 +175,14 @@ const Profile = () => {
                     <i className="fas fa-user-tag mr-2"></i>
                     Role:
                   </span>
-                  <span className="classic-info-value">{user.role || "Not set"}</span>
+                  <span className="classic-info-value">
+                    {{
+                      student: 'Student',
+                      admin: 'System Administrator',
+                      staff: 'Staff/Faculty',
+                      general_user: 'General User',
+                    }[user.role] || 'Not set'}
+                  </span>
                 </div>
                 
                 <div className="classic-info-item">

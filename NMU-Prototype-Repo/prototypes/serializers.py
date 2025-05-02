@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import CustomUser, Prototype, PrototypeAttachment, Department
+from .models import CustomUser, Prototype, PrototypeAttachment, Department , PrototypeComment
+
 from django.contrib.auth.password_validation import validate_password
 from .models import CustomUser
 from django.contrib.auth import get_user_model
@@ -7,11 +8,18 @@ from django.contrib.auth.hashers import make_password
 
 User = get_user_model()
 
+class DepartmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Department
+        fields = '__all__'
+
 class UserSerializer(serializers.ModelSerializer):
     role_display = serializers.CharField(source='get_role_display', read_only=True)
     level_display = serializers.CharField(source='get_level_display', read_only=True)
     password = serializers.CharField(write_only=True, required=True)
     password_confirmation = serializers.CharField(write_only=True, required=True)
+    department = DepartmentSerializer()
+
     class Meta:
         model = CustomUser
         fields = [
@@ -35,10 +43,7 @@ class UserSerializer(serializers.ModelSerializer):
         validated_data.pop('password_confirmation')  # Remove confirmation field
         validated_data['password'] = make_password(validated_data['password'])
         return super().create(validated_data)
-class DepartmentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Department
-        fields = '__all__'
+
 
 class PrototypeAttachmentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -192,3 +197,13 @@ class GeneralUserRegistrationSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+
+
+
+class PrototypeCommentSerializer(serializers.ModelSerializer):
+    full_name = serializers.CharField(source="user.full_name", read_only=True)
+
+    class Meta:
+        model = PrototypeComment
+        fields = ['id', 'prototype', 'user', 'full_name', 'comment', 'created_at']
+        read_only_fields = ['user', 'created_at']
