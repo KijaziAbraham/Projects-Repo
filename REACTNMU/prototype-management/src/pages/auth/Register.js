@@ -8,7 +8,7 @@ import { FaUserAlt } from "react-icons/fa";
 import PhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css';
 
-const API_URL = "http://127.0.0.1:8000/api/auth/register/"; // API endpoint for registration
+const API_URL = "https://fyp1.pythonanywhere.com/api/auth/register/"; // API endpoint for registration
 
 const Register = () => {
   const [fullName, setFullName] = useState("");

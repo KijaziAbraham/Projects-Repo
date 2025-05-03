@@ -159,6 +159,13 @@ const ViewAllPrototype =  ({ show, onHide, prototypeId })  => {
       </a>
     );
   };
+  if (loading) return (
+    <div className="classic-loading">
+      <i className="fas fa-spinner fa-spin"></i> Loading details...
+    </div>
+  );
+
+  if (!user) return <div className="classic-no-data">No data found</div>;
 
   return (
     <div className="dashboard-container">
@@ -175,17 +182,7 @@ const ViewAllPrototype =  ({ show, onHide, prototypeId })  => {
         <i className="fas fa-layer-group mr-2"></i>
         All Prototypes
       </h2>
-          {loading && !selectedPrototype ? (
-            <div className="loading-state">
-              <div className="spinner-border text-primary" role="status"></div>
-              <p>Loading prototypes...</p>
-            </div>
-          ) : error ? (
-            <div className="error-state">
-              <i className="fas fa-exclamation-circle"></i>
-              <p>{error}</p>
-            </div>
-          ) : (
+         
             <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
               {allPrototypes.length > 0 ? (
                 allPrototypes.map((prototype) => (
@@ -226,7 +223,6 @@ const ViewAllPrototype =  ({ show, onHide, prototypeId })  => {
                 </div>
               )}
             </div>
-          )}
         </div>
 
         {/* Prototype Detail Modal */}

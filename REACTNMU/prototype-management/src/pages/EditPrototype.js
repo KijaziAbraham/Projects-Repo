@@ -98,12 +98,10 @@ const EditPrototype = ({ show, onHide, prototypeId, onPrototypeUpdated }) => {
         {error && <div className="alert alert-danger">{error}</div>}
         
         {loading ? (
-          <div className="text-center py-4">
-            <div className="spinner-border text-primary" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </div>
-            <p className="mt-2">Loading prototype details for editing...</p>
-          </div>
+          <div className="classic-loading">
+          <i className="fas fa-spinner fa-spin"></i> Loading prototype details for editing...
+        </div>
+            
         ) : (
           <Form onSubmit={handleUpdate} className="prototype-form">
             {/* Basic Information Section */}
@@ -212,12 +210,13 @@ const EditPrototype = ({ show, onHide, prototypeId, onPrototypeUpdated }) => {
             </div>
 
             <div className="form-actions">
-              <Button 
-                variant="outline-secondary" 
-                onClick={onHide} 
-                className="cancel-btn"
-                disabled={loading}
-              >
+            <Button 
+              variant="outline-secondary" 
+              onClick={onHide} 
+              className="classic-modal-btn classic-modal-btn-cancel" 
+              disabled={loading}>
+               <i className="fas fa-times mr-2"></i>
+
                 Cancel
               </Button>
               <Button 
@@ -233,7 +232,7 @@ const EditPrototype = ({ show, onHide, prototypeId, onPrototypeUpdated }) => {
                   </>
                 ) : (
                   <>
-                    <i className="fas fa-save mr-2"></i>
+                    <i className="fas fa-save mr-2" style={{ color: 'white' }}></i>
                     Update Prototype
                   </>
                 )}

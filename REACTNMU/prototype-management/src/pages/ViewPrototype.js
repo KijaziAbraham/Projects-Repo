@@ -83,6 +83,9 @@ const ViewPrototypeModal = ({ show, onHide, prototypeId }) => {
     );
   };
 
+  
+ 
+
   return (
     <Modal show={show} onHide={onHide} size="lg" className="classic-modal">
       <Modal.Header closeButton className="modal-header">
@@ -94,12 +97,9 @@ const ViewPrototypeModal = ({ show, onHide, prototypeId }) => {
       
       <Modal.Body className="modal-body">
         {loading ? (
-          <div className="loading-state">
-            <div className="spinner-border text-primary" role="status">
-              <span className="sr-only">Loading...</span>
-            </div>
-            <p>Loading prototype details...</p>
-          </div>
+          <div className="classic-loading">
+          <i className="fas fa-spinner fa-spin"></i> Loading prototype details...
+        </div>
         ) : error ? (
           <div className="error-state">
             <i className="fas fa-exclamation-circle text-danger"></i>

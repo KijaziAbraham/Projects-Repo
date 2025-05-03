@@ -124,11 +124,12 @@ const ReviewPrototypeModal = ({ show, onHide, prototypeId, onReviewSubmitted }) 
 
             <div className="form-actions">
               <Button 
-                variant="outline-secondary" 
-                onClick={onHide} 
-                className="cancel-btn"
-                disabled={submitting}
-              >
+              variant="outline-secondary" 
+              onClick={onHide} 
+              className="classic-modal-btn classic-modal-btn-cancel" 
+              disabled={submitting}>
+               <i className="fas fa-times mr-2"></i>
+
                 Cancel
               </Button>
               <Button 
@@ -144,7 +145,8 @@ const ReviewPrototypeModal = ({ show, onHide, prototypeId, onReviewSubmitted }) 
                   </>
                 ) : (
                   <>
-                    <i className="fas fa-paper-plane mr-2"></i>
+                    <i className="fas fa-paper-plane mr-2"style={{ color: 'white' }}></i>
+
                     Submit Review
                   </>
                 )}
@@ -152,10 +154,9 @@ const ReviewPrototypeModal = ({ show, onHide, prototypeId, onReviewSubmitted }) 
             </div>
           </Form>
         ) : (
-          <div className="loading-state">
-            <Spinner animation="border" variant="primary" />
-            <p>Loading prototype details...</p>
-          </div>
+          <div className="classic-loading">
+          <i className="fas fa-spinner fa-spin"></i> Loading prototype details...
+        </div>
         )}
       </Modal.Body>
     </Modal>

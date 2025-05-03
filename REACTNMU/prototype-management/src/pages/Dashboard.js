@@ -135,6 +135,15 @@ const Dashboard = () => {
 
   const displayedPrototypes = prototypes.slice(0, 6);
 
+
+  if (loading) return (
+    <div className="classic-loading">
+      <i className="fas fa-spinner fa-spin"></i> Loading Dashboard...
+    </div>
+  );
+
+  if (!user) return <div className="classic-no-data">No user data found</div>;
+
   return (
     <div className="dashboard-container">
       <DashboardSidebar />

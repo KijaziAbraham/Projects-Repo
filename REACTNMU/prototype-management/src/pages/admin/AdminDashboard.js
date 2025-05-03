@@ -423,8 +423,8 @@ const AdminDashboard = () => {
                                     className="action-control primary" 
                                     onClick={() => openModal("department")}
                                 >
-                                    <i className="fas fa-plus mr-2"></i>
-                                      Add Department
+                                    <i className="fas fa-plus mr-2" style={{ color: 'white' }}></i>
+                                    Add Department
                                 </button>
                             </div>
 
@@ -574,7 +574,7 @@ const AdminDashboard = () => {
                     </label>
                     <select
                         className="classic-form-control"
-                        value={modalData.user.department}
+                        value={modalData.user.department.name}
                         onChange={(e) => handleInputChange('user', 'department', e.target.value)}
                     >
                         <option value="">Select Department</option>

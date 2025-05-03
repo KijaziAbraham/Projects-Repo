@@ -18,8 +18,12 @@ class UserSerializer(serializers.ModelSerializer):
     level_display = serializers.CharField(source='get_level_display', read_only=True)
     password = serializers.CharField(write_only=True, required=True)
     password_confirmation = serializers.CharField(write_only=True, required=True)
-    department = DepartmentSerializer()
+    department = serializers.SerializerMethodField()
 
+    def get_department(self, obj):
+        if obj.department:
+            return obj.department.name
+        return None
     class Meta:
         model = CustomUser
         fields = [
@@ -42,6 +46,13 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data.pop('password_confirmation')  # Remove confirmation field
         validated_data['password'] = make_password(validated_data['password'])
+
+        
+        if validated_data.get('role') == 'admin':
+            validated_data['is_staff'] = True
+        else:
+            validated_data['is_staff'] = False
+
         return super().create(validated_data)
 
 

@@ -284,9 +284,13 @@ const ReviewPrototypes = () => {
   };
 
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+  if (loading) return (
+    <div className="classic-loading">
+      <i className="fas fa-spinner fa-spin"></i> Loading prototype...
+    </div>
+  );
 
-  if (loading) return <p className="mt-5 text-center">Loading prototypes...</p>;
-  if (error) return <p className="mt-5 text-center text-danger">{error}</p>;
+  if (!user) return <div className="classic-no-data">No user data found</div>;
 
 
   return (

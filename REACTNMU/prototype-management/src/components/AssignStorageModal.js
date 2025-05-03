@@ -90,9 +90,11 @@ const AssignStorageModal = ({ show, onHide, prototypeId, onStorageAssigned }) =>
             <Button 
               variant="outline-secondary" 
               onClick={onHide} 
-              className="cancel-btn"
+              className="classic-modal-btn classic-modal-btn-cancel" 
               disabled={loading}
             >
+             <i className="fas fa-times mr-2"></i>
+
               Cancel
             </Button>
             <Button 
@@ -108,8 +110,8 @@ const AssignStorageModal = ({ show, onHide, prototypeId, onStorageAssigned }) =>
                 </>
               ) : (
                 <>
-                  <i className="fas fa-save mr-2"></i>
-                  Save Location
+                <i className="fas fa-save mr-2"style={{ color: 'white' }}></i>
+                Save Location
                 </>
               )}
             </Button>

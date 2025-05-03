@@ -89,7 +89,7 @@ const SubmitPrototypeModal = ({ show, onHide, onPrototypeSubmitted }) => {
         try {
           const res = await api.get(`users/${selectedStudent}/`);
           const student = res.data;
-          setStudentDepartment(student.department.name || "");
+          setStudentDepartment(student.department || "");
           setStudentLevel(student.level_display || "");
         } catch (err) {
           console.error("Error fetching selected student info:", err);

@@ -8,7 +8,7 @@ import { MdOutlineEmail } from "react-icons/md";
 import { TbPasswordFingerprint } from "react-icons/tb";
 import ClassicPreloader from "../Preloader";
 
-const API_URL = "http://127.0.0.1:8000/api/auth/login/";
+const API_URL = "https://fyp1.pythonanywhere.com/api/auth/login/";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -34,7 +34,7 @@ const Login = () => {
       setShowPreloader(true);
   
       // Fetch user details using the access token
-      const userResponse = await axios.get("http://127.0.0.1:8000/api/user/profile/", {
+      const userResponse = await axios.get("https://fyp1.pythonanywhere.com/api/user/profile/", {
         headers: {
           "Authorization": `Bearer ${accessToken}`,
         }
