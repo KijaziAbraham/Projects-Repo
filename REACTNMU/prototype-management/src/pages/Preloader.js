@@ -7,7 +7,6 @@ const Preloader = () => {
     <div className="preloader-overlay">
       <div className="classic-preloader">
         <div className="spinner"></div>
-        <div className="loading-text">Loading Dashboard...</div>
       </div>
     </div>
   );

@@ -12,6 +12,7 @@ import Settings from './pages/Settings';
 import ChangePassword from './pages/ChangePassword';
 import ViewAllPrototype from './pages/ViewAllPrototype';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import { UserProvider } from './components/context/UserContext';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -25,6 +26,7 @@ const PrivateRoute = ({ element }) => {
 function App() {
   return (
     <Router>
+      <UserProvider>
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -39,8 +41,8 @@ function App() {
         <Route path="/prototypes" element={<PrivateRoute element={<ViewAllPrototype/>} />} />
         <Route path="/admin-dashboard" element={<PrivateRoute element={<AdminDashboard />} />} />
         {/* <Route path="*" element={<Navigate to="/" />} /> Redirect to login if route not found */}
-
       </Routes>
+      </UserProvider>
     </Router>
   );
 }

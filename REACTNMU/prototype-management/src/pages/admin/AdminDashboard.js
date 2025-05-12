@@ -4,6 +4,7 @@ import DashboardSidebar from '../../components/Sidebar';
 import DashboardHeader from "../../components/ProfileNavbar";
 import '../Materials/css/AdminDashboard.css';
 import './css/DashboardModalCss.css';
+import ClassicPreloader from './../Preloader'
 import BulkImportModal from './BulkImportModal';
 
 
@@ -306,8 +307,7 @@ const AdminDashboard = () => {
 
                             {loading.users ? (
                                 <div className="loading-state">
-                                    <i className="fas fa-spinner fa-spin"></i>
-                                    <span>Loading users...</span>
+                                    <ClassicPreloader/>
                                 </div>
                             ) : errors.users ? (
                                 <div className="error-message">

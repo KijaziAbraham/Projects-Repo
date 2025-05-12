@@ -3,14 +3,13 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { MdDashboard, MdScience, MdReviews, MdPerson } from 'react-icons/md';
 import { TbXboxAFilled } from "react-icons/tb";
 import { FaBars, FaTimes, FaSignOutAlt } from 'react-icons/fa';
-import api from '../api/api';
+import { useUser } from './context/UserContext'; 
 import './assets/css/Sidebar.css';
 
 const Sidebar = () => {
-  const [user, setUser] = useState(null);
-  const [userRole, setUserRole] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useUser(); // Get user from context instead of local state
   const [isOpen, setIsOpen] = useState(() => {
     const isMobile = window.innerWidth <= 768;
     return localStorage.getItem('sidebarOpen') === 'false' ? false : !isMobile;
@@ -18,12 +17,12 @@ const Sidebar = () => {
   const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 768);
 
   const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-    localStorage.setItem('sidebarOpen', !isOpen);
+    const newState = !isOpen;
+    setIsOpen(newState);
+    localStorage.setItem('sidebarOpen', newState);
   };
 
   useEffect(() => {
-    fetchUser();
     const handleResize = () => {
       const mobileCheck = window.innerWidth <= 768;
       setIsMobileView(mobileCheck);
@@ -32,8 +31,9 @@ const Sidebar = () => {
         setIsOpen(false);
         localStorage.setItem('sidebarOpen', false);
       } else {
-        setIsOpen(true);
-        localStorage.setItem('sidebarOpen', true);
+        // Only set to true if it was previously open
+        const shouldOpen = localStorage.getItem('sidebarOpen') !== 'false';
+        setIsOpen(shouldOpen);
       }
     };
 
@@ -41,39 +41,20 @@ const Sidebar = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const fetchUser = async () => {
-    try {
-      const response = await api.get('user/profile/');
-      setUser(response.data);
-      setUserRole(response.data.role);
-    } catch (error) {
-      console.error('Error fetching user profile:', error);
-    }
-  };
-
   const getMenuItems = () => {
-    switch (userRole) {
+    if (!user?.role) return []; // Return empty if no user role
+    
+    const commonItems = [
+      { path: '/dashboard', icon: <MdDashboard />, text: 'Dashboard' },
+      { path: '/prototypes', icon: <MdScience />, text: 'Prototypes' },
+      { path: '/reviews', icon: <MdReviews />, text: 'Reviews' },
+      { path: '/profile', icon: <MdPerson />, text: 'Profile' },
+    ];
+
+    switch (user.role) {
       case 'admin':
-        return [
-          { path: '/dashboard', icon: <MdDashboard />, text: 'Dashboard' },
-          { path: '/prototypes', icon: <MdScience />, text: 'All Prototypes' },
-          { path: '/reviews', icon: <MdReviews />, text: 'Reviews' },
-          { path: '/profile', icon: <MdPerson />, text: 'Profile' },
-          { path: '/admin-dashboard', icon: <TbXboxAFilled />, text: 'Admin Panel' },
-        ];
-      case 'staff':
-        return [
-          { path: '/dashboard', icon: <MdDashboard />, text: 'Dashboard' },
-          { path: '/prototypes', icon: <MdScience />, text: 'Prototypes' },
-          { path: '/reviews', icon: <MdReviews />, text: 'Reviews' },
-          { path: '/profile', icon: <MdPerson />, text: 'Profile' },
-        ];
-      case 'student':
-        return [
-          { path: '/dashboard', icon: <MdDashboard />, text: 'Dashboard' },
-          { path: '/prototypes', icon: <MdScience />, text: 'Prototypes' },
-          { path: '/reviews', icon: <MdReviews />, text: 'Reviews' },
-          { path: '/profile', icon: <MdPerson />, text: 'Profile' },
+        return [...commonItems, 
+          { path: '/admin-dashboard', icon: <TbXboxAFilled />, text: 'Admin Panel' }
         ];
       case 'general_user':
         return [
@@ -81,7 +62,7 @@ const Sidebar = () => {
           { path: '/profile', icon: <MdPerson />, text: 'Profile' },
         ];
       default:
-        return [];
+        return commonItems;
     }
   };
 
@@ -94,7 +75,12 @@ const Sidebar = () => {
           <span className="logo-icon">P</span>
           {isOpen && !isMobileView && 'PrototypeHub'}
         </h5>
-        <button className="sidebar-toggle" style={{marginLeft:'16px' }} onClick={toggleSidebar}>
+        <button 
+          className="sidebar-toggle" 
+          style={{ marginLeft: '16px' }} 
+          onClick={toggleSidebar}
+          aria-label={isOpen ? 'Collapse sidebar' : 'Expand sidebar'}
+        >
           {isOpen ? <FaTimes /> : <FaBars />}
         </button>
       </div>
@@ -105,11 +91,16 @@ const Sidebar = () => {
             <button
               className={`menu-item ${location.pathname === item.path ? 'active-link' : ''}`}
               onClick={() => navigate(item.path)}
+              aria-current={location.pathname === item.path ? 'page' : undefined}
             >
               <div className="menu-item-content">
                 <span className="icon">{item.icon}</span>
-                {isOpen && !isMobileView && <span className="menu-text">{item.text}</span>}
-                {!isOpen && <span className="tooltip">{item.text}</span>}
+                {isOpen && !isMobileView && (
+                  <span className="menu-text">{item.text}</span>
+                )}
+                {!isOpen && (
+                  <span className="tooltip" role="tooltip">{item.text}</span>
+                )}
               </div>
             </button>
           </li>
@@ -117,11 +108,16 @@ const Sidebar = () => {
       </ul>
 
       <div className="sidebar-footer">
-        <button className="logout-btn" onClick={() => navigate('/')}>
-          <FaSignOutAlt />
-          {isOpen && !isMobileView && 'LOGOUT'}
-        </button>
-      </div>
+  <button 
+    className="logout-btn" 
+    onClick={() => navigate('/')}
+    aria-label="Logout"
+  >
+    <FaSignOutAlt className="icon" />
+    {isOpen && !isMobileView && 'LOGOUT'}
+    <span className="tooltip" role="tooltip">Logout</span>
+  </button>
+</div>
     </div>
   );
 };

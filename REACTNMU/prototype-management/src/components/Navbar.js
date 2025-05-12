@@ -33,15 +33,7 @@ const DashboardNavbar = ({ user, searchTerm, setSearchTerm, handleShowSubmitModa
             />
             </div>
             <Button style={{backgroundColor:'#64A293',border:'none',}}>Search</Button>
-          {(userRole === 'student' || userRole === 'admin' || userRole === 'staff') && (
-            <Button 
-              style={{backgroundColor:'#64A293',border:'none'}}
-              className="ms-2" 
-              onClick={handleShowSubmitModal}
-            >
-              <BsPlusLg />
-            </Button>
-          )}
+         
 </div>
         </Navbar.Collapse>
       </Container>

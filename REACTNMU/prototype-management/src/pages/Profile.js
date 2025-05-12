@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import DashboardSidebar from "../components/Sidebar";
 import DashboardHeader from "../components/ProfileNavbar";
 import api from "../api/api";
+import ClassicPreloader from "./Preloader";
 import zxcvbn from "zxcvbn";
 import "./Materials/css/Profile.css";
 
@@ -111,7 +112,7 @@ const Profile = () => {
 
   if (loading) return (
     <div className="classic-loading">
-      <i className="fas fa-spinner fa-spin"></i> Loading profile...
+       <ClassicPreloader/>
     </div>
   );
 

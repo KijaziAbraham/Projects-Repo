@@ -5,10 +5,11 @@ import DashboardHeader from '../components/Navbar';
 import api from '../api/api';
 import "../pages/Materials/css/ReviewPrototype.css";
 import { TiCloudStorage } from "react-icons/ti";
-import {  Dropdown } from 'react-bootstrap';
+import { Dropdown } from 'react-bootstrap';
 import { PencilSquare, Eye, ChatDots } from 'react-bootstrap-icons';
 import ViewPrototypeModal from './ViewPrototype';
 import EditPrototypeModal from './EditPrototype';
+import ClassicPreloader from "./Preloader";
 import ReviewPrototypeModal from "../components/ReviewPrototypeModal";
 import AssignStorageModal from '../components/AssignStorageModal';
 
@@ -20,8 +21,6 @@ const ReviewPrototypes = () => {
   const [prototypes, setPrototypes] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [students, setStudents] = useState([]); 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [departmentFilter, setDepartmentFilter] = useState('');
   const [departments, setDepartments] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -36,8 +35,9 @@ const ReviewPrototypes = () => {
   const [selectedPrototypeForAssignStorage, setSelectedPrototypeForAssignStorage] = useState(null);
   const [storageLocations, setStorageLocations] = useState([]);
   const [storageFilter, setStorageFilter] = useState("");
+  const [initialLoad, setInitialLoad] = useState(true);
 
-  // Classic Pagination Component (added to the same file)
+  // Classic Pagination Component
   const ClassicPagination = ({ currentPage, totalPages, onPageChange }) => {
     const getPageNumbers = () => {
       const pages = [];
@@ -48,10 +48,7 @@ const ReviewPrototypes = () => {
           pages.push(i);
         }
       } else {
-        // Always show first page
         pages.push(1);
-        
-        // Show current page and surrounding pages
         let start = Math.max(2, currentPage - 1);
         let end = Math.min(totalPages - 1, currentPage + 1);
         
@@ -61,22 +58,9 @@ const ReviewPrototypes = () => {
           start = totalPages - 3;
         }
         
-        // Add ellipsis if needed
-        if (start > 2) {
-          pages.push('...');
-        }
-        
-        // Add middle pages
-        for (let i = start; i <= end; i++) {
-          pages.push(i);
-        }
-        
-        // Add ellipsis if needed
-        if (end < totalPages - 1) {
-          pages.push('...');
-        }
-        
-        // Always show last page
+        if (start > 2) pages.push('...');
+        for (let i = start; i <= end; i++) pages.push(i);
+        if (end < totalPages - 1) pages.push('...');
         pages.push(totalPages);
       }
       
@@ -119,110 +103,61 @@ const ReviewPrototypes = () => {
     );
   };
 
+  // Initial data fetch
   useEffect(() => {
-    fetchUserProfile();
-    fetchDepartments();
-    fetchStudents(); 
+    const fetchInitialData = async () => {
+      try {
+        const [userRes, deptsRes, studentsRes] = await Promise.all([
+          api.get("user/profile/"),
+          api.get("departments/"),
+          api.get("users/students/")
+        ]);
+        
+        setUser(userRes.data);
+        setDepartments(deptsRes.data || []);
+        setStudents(studentsRes.data || []);
+        
+        if (userRes.data?.role) {
+          const prototypesRes = await api.get(
+            `prototypes/?page=${currentPage}&page_size=${ITEMS_PER_PAGE}`
+          );
+          setPrototypes(prototypesRes.data.results || prototypesRes.data || []);
+          setTotalItems(prototypesRes.data.count || 0);
+        }
+      } catch (error) {
+        console.error("Error fetching initial data:", error);
+      } finally {
+        setInitialLoad(false);
+      }
+    };
+
+    fetchInitialData();
   }, []);
 
-  useEffect(() => {
-    if (user?.role) {
-      fetchPrototypes();
-      fetchStorageLocations();
-    }
-  }, [user, searchTerm, storageFilter, currentPage]);
-
-  const fetchUserProfile = async () => {
-    try {
-      const response = await api.get("user/profile/");
-      setUser(response.data);
-    } catch (error) {
-      console.error("Error fetching user profile:", error);
-      setError("Failed to load user profile.");
-    }
-  };
-
-  const fetchDepartments = async () => {
-    try {
-      const response = await api.get("departments/");
-      setDepartments(response.data || []);
-    } catch (error) {
-      console.error("Error fetching departments:", error);
-    }
-  };
-
-  const fetchStudents = async () => {
-    try {
-      const response = await api.get("users/students/");
-      setStudents(response.data || []);
-    } catch (error) {
-      console.error("Error fetching students:", error);
-    }
-  };
-
-  const fetchPrototypes = async () => {
-    setLoading(true);
-    try {
-      const response = await api.get(`prototypes/?search=${searchTerm}&storage_location=${storageFilter}&page=${currentPage}&page_size=10`);
-      const data = response.data;
-      const fetchedPrototypes = Array.isArray(data) ? data : data.results || [];
-
-      const studentPrototypes = fetchedPrototypes.filter(p => p.student && p.student.id === user.id);
-      const otherPrototypes = fetchedPrototypes.filter(p => p.student && p.student.id !== user.id);
-      const sortedPrototypes = [...studentPrototypes, ...otherPrototypes];
-
-      setPrototypes(sortedPrototypes);
-    } catch (error) {
-      console.error("Error fetching prototypes:", error);
-      setPrototypes([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchStorageLocations = async () => {
-    try {
-      const response = await api.get("prototypes/storage_locations/");
-      setStorageLocations(response.data || []);
-    } catch (error) {
-      console.error("Error fetching storage locations:", error);
-    }
-  };
-
+  // Fetch data when filters change
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
-      setError(null);
       try {
-        let response;
-        if (user?.role === 'student') {
-          response = await api.get(`prototypes/?student=${user.id}&page=${currentPage}&page_size=${ITEMS_PER_PAGE}`);
-        } else if (user?.role === 'staff') {
-          response = await api.get(`prototypes/?department=${user.department?.id}&page=${currentPage}&page_size=${ITEMS_PER_PAGE}${departmentFilter ? `&department_filter=${departmentFilter}` : ''}`);
-        } else if (user?.role === 'admin') {
-          response = await api.get(`prototypes/?page=${currentPage}&page_size=${ITEMS_PER_PAGE}${departmentFilter ? `&department_filter=${departmentFilter}` : ''}`);
-        } else {
-          setPrototypes([]);
-          setTotalItems(0);
-          setLoading(false);
-          return;
+        let endpoint = `prototypes/?page=${currentPage}&page_size=${ITEMS_PER_PAGE}`;
+        
+        if (searchTerm) endpoint += `&search=${searchTerm}`;
+        if (storageFilter) endpoint += `&storage_location=${storageFilter}`;
+        if (departmentFilter && user?.role !== 'student') {
+          endpoint += `&department_filter=${departmentFilter}`;
         }
+
+        const response = await api.get(endpoint);
         setPrototypes(response.data.results || response.data || []);
         setTotalItems(response.data.count || 0);
       } catch (error) {
         console.error("Error fetching prototypes:", error);
-        setError("Failed to load prototypes.");
-        setPrototypes([]);
-        setTotalItems(0);
-      } finally {
-        setLoading(false);
       }
     };
 
     if (user) {
       fetchData();
     }
-  }, [user, currentPage, departmentFilter]);
+  }, [user, currentPage, departmentFilter, searchTerm, storageFilter]);
 
   const getStudentName = (studentId) => {
     const student = students.find(s => s.id === studentId);
@@ -234,23 +169,9 @@ const ReviewPrototypes = () => {
     setShowViewModal(true);
   };
 
-  const handleCloseViewModal = () => {
-    setShowViewModal(false);
-    setSelectedPrototypeIdForView(null);
-  };
-
   const handleEditClick = (prototypeId) => {
     setSelectedPrototypeIdForEdit(prototypeId);
     setShowEditModal(true);
-  };
-
-  const handleCloseEditModal = () => {
-    setShowEditModal(false);
-    setSelectedPrototypeIdForEdit(null);
-  };
-
-  const handlePrototypeUpdated = () => {
-    setCurrentPage(1);
   };
 
   const handleReviewClick = (prototypeId) => {
@@ -258,40 +179,31 @@ const ReviewPrototypes = () => {
     setShowReviewModal(true);
   };
 
-  const handleCloseReviewModal = () => {
-    setSelectedPrototypeIdForReview(null);
-    setShowReviewModal(false);
-  };
-
   const handleAssignStorageClick = (prototypeId) => {
     setSelectedPrototypeForAssignStorage(prototypeId);
     setShowAssignStorageModal(true);
   };
 
-  const handleCloseAssignStorageModal = () => {
-    setShowAssignStorageModal(false);
-    setSelectedPrototypeForAssignStorage(null);
+  const handleDepartmentChange = (departmentId) => {
+    setDepartmentFilter(departmentId);
+    setCurrentPage(1);
   };
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
-  
-  const handleDepartmentChange = (departmentId) => {
-    setDepartmentFilter(departmentId);
-    setCurrentPage(1);
-  };
-
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-  if (loading) return (
-    <div className="classic-loading">
-      <i className="fas fa-spinner fa-spin"></i> Loading prototype...
-    </div>
-  );
+
+  if (initialLoad) {
+    return (
+      <div className="classic-loading">
+        <ClassicPreloader/>
+      </div>
+    );
+  }
 
   if (!user) return <div className="classic-no-data">No user data found</div>;
-
 
   return (
     <div className='dashboard-layout'>
@@ -304,8 +216,11 @@ const ReviewPrototypes = () => {
         />
 
         <div className="review-prototypes-container">
-        <h2 class="classic-profile-title"><i class="fas fa-comments mr-2"></i>Review Prototype</h2>
-                  {(user?.role === 'staff' || user?.role === 'admin') && (
+          <h2 className="classic-profile-title">
+            <i className="fas fa-comments mr-2"></i>Review Prototype
+          </h2>
+          
+          {(user?.role === 'staff' || user?.role === 'admin') && (
             <div className="mb-3">
               <Dropdown>
                 <Dropdown.Toggle variant="outline-secondary" id="dropdown-department">
@@ -349,26 +264,37 @@ const ReviewPrototypes = () => {
                       </td>
                       <td data-label="Actions" className="actions-cell">
                         <div className="action-buttons">
-                          <button className="btn btn-info btn-sm view-btn" style={{backgroundColor:'#64A293',border:'none', color:'white'}} onClick={() => handleViewClick(prototype.id)}>
+                          <button 
+                            className="btn btn-info btn-sm view-btn" 
+                            style={{backgroundColor:'#64A293',border:'none', color:'white'}} 
+                            onClick={() => handleViewClick(prototype.id)}
+                          >
                             <Eye /> <span className="btn-text">View</span>
                           </button>
 
                           {user?.role === 'student' && prototype.student.id === user.id && (
-                            <button className="btn btn-warning btn-sm edit-btn" onClick={() => handleEditClick(prototype.id)}>
+                            <button 
+                              className="btn btn-warning btn-sm edit-btn" 
+                              onClick={() => handleEditClick(prototype.id)}
+                            >
                               <PencilSquare /> <span className="btn-text">Edit</span>
                             </button>
                           )}
                          
-
-
                           {(user?.role === 'staff' || user?.role === 'admin') && (
                             <>
-                              <button className="btn btn-primary btn-sm review-btn" onClick={() => handleReviewClick(prototype.id)}>
+                              <button 
+                                className="btn btn-primary btn-sm review-btn" 
+                                onClick={() => handleReviewClick(prototype.id)}
+                              >
                                 <ChatDots /> <span className="btn-text">Review</span>
                               </button>
 
-                              <button className="btn btn-secondary btn-sm storage-btn" onClick={() => handleAssignStorageClick(prototype.id)}>
-                              <TiCloudStorage /> <span className="btn-text"> Assign Storage</span>
+                              <button 
+                                className="btn btn-secondary btn-sm storage-btn" 
+                                onClick={() => handleAssignStorageClick(prototype.id)}
+                              >
+                                <TiCloudStorage /> <span className="btn-text"> Assign Storage</span>
                               </button>
                             </>
                           )}
@@ -390,29 +316,28 @@ const ReviewPrototypes = () => {
           {/* Modals */}
           <ViewPrototypeModal
             show={showViewModal}
-            onHide={handleCloseViewModal}
+            onHide={() => setShowViewModal(false)}
             prototypeId={selectedPrototypeIdForView}
           />
           <EditPrototypeModal
             show={showEditModal}
-            onHide={handleCloseEditModal}
+            onHide={() => setShowEditModal(false)}
             prototypeId={selectedPrototypeIdForEdit}
-            onPrototypeUpdated={handlePrototypeUpdated}
           />
           <ReviewPrototypeModal
             show={showReviewModal}
-            onHide={handleCloseReviewModal}
+            onHide={() => setShowReviewModal(false)}
             prototypeId={selectedPrototypeIdForReview}
           />
           <AssignStorageModal
             show={showAssignStorageModal}
-            onHide={handleCloseAssignStorageModal}
+            onHide={() => setShowAssignStorageModal(false)}
             prototypeId={selectedPrototypeForAssignStorage}
           />
 
-          {/* Classic Pagination */}
+          {/* Pagination */}
           {totalPages > 1 && (
-            <div className="pagination-wrapper" style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center' }}>
+            <div className="pagination-wrapper">
               <ClassicPagination 
                 currentPage={currentPage}
                 totalPages={totalPages}
@@ -422,55 +347,6 @@ const ReviewPrototypes = () => {
           )}
         </div>
       </div>
-
-      {/* Add the CSS for the pagination */}
-      <style jsx>{`
-        .classic-pagination {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          gap: 0.5rem;
-          margin: 1rem 0;
-        }
-        
-        .classic-pagination button {
-          padding: 0.5rem 1rem;
-          border: 1px solid #64A293;
-          background: white;
-          color: #64A293;
-          border-radius: 4px;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          min-width: 40px;
-          text-align: center;
-        }
-        
-        .classic-pagination button:hover:not(:disabled) {
-          background: #64A293;
-          color: white;
-        }
-        
-        .classic-pagination button.active {
-          background: #64A293;
-          color: white;
-          font-weight: bold;
-        }
-        
-        .classic-pagination button:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
-        
-        .pagination-ellipsis {
-          padding: 0.5rem;
-          color: #64A293;
-        }
-        
-        .pagination-arrow {
-          font-size: 1rem;
-          padding: 0.5rem;
-        }
-      `}</style>
     </div>
   );
 };
